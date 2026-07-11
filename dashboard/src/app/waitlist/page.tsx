@@ -1,21 +1,29 @@
 "use client";
 
 import { useState } from 'react';
+import { joinWaitlist } from '@/app/actions/waitlist';
 
 export default function WaitlistPage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    // Simulate API call to save email
-    setTimeout(() => {
-      setLoading(false);
+    setErrorMsg('');
+    
+    const result = await joinWaitlist(email);
+    
+    setLoading(false);
+    if (result.error) {
+      setErrorMsg(result.error);
+    } else {
       setSubmitted(true);
-    }, 1000);
+    }
   };
 
   return (
@@ -49,7 +57,7 @@ export default function WaitlistPage() {
               style={{
                 width: '100%',
                 backgroundColor: '#060606',
-                border: '1px solid #1a1a1a',
+                border: errorMsg ? '1px solid #e54d2e' : '1px solid #1a1a1a',
                 borderRadius: '8px',
                 padding: '12px 16px',
                 fontSize: '15px',
@@ -57,9 +65,10 @@ export default function WaitlistPage() {
                 outline: 'none',
                 transition: 'border-color 0.2s'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#333'}
-              onBlur={(e) => e.target.style.borderColor = '#1a1a1a'}
+              onFocus={(e) => e.target.style.borderColor = errorMsg ? '#e54d2e' : '#333'}
+              onBlur={(e) => e.target.style.borderColor = errorMsg ? '#e54d2e' : '#1a1a1a'}
             />
+            {errorMsg && <p style={{ fontSize: '13px', color: '#e54d2e', margin: 0 }}>{errorMsg}</p>}
             <button
               type="submit"
               disabled={loading}
