@@ -1,5 +1,6 @@
 import ScrollReveal from '@/components/landing/scroll-reveal';
 import PayloadViewer from '@/components/landing/payload-viewer';
+import Nav from '@/components/landing/nav';
 
 // Global hover styles
 function GlobalStyles() {
@@ -55,30 +56,6 @@ function IllustrationTunnel() {
   return <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>;
 }
 const ILLUSTRATIONS = [IllustrationShield, IllustrationEye, IllustrationReplay, IllustrationRetry, IllustrationLogs, IllustrationTunnel];
-
-// Nav
-function Nav() {
-  return (
-    <header className="sticky top-0 z-50" style={{ backgroundColor: '#000000', borderBottom: '1px solid #1a1a1a', height: '56px' }}>
-      <div className="mx-auto max-w-[1280px] px-6 h-full flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2.5" aria-label="HookLens home">
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="8" stroke="#5e6ad2" strokeWidth="1.5" />
-            <circle cx="10" cy="10" r="3.5" fill="#5e6ad2" />
-            <path d="M10 3 L10 6.5 M10 13.5 L10 17 M3 10 L6.5 10 M13.5 10 L17 10" stroke="#5e6ad2" strokeWidth="1.2" strokeLinecap="round" />
-          </svg>
-          <span style={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.2px', color: '#fff' }}>HookLens</span>
-        </a>
-        <nav className="hidden md:flex items-center gap-6" aria-label="Primary navigation">
-          {[{ label: 'Product', href: '#features' }, { label: 'Docs', href: '/docs' }, { label: 'GitHub', href: 'https://github.com/abubakar2906/hooklens' }].map(({ label, href }) => (
-            <a key={label} href={href} className="nav-link">{label}</a>
-          ))}
-        </nav>
-        <a href="/waitlist" style={{ fontSize: '14px', fontWeight: 500, color: '#000', backgroundColor: '#fff', borderRadius: '8px', padding: '8px 16px' }}>Join waitlist</a>
-      </div>
-    </header>
-  );
-}
 
 // Trusted-by ticker
 function TrustedBy() {
