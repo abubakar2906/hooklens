@@ -70,7 +70,7 @@ function Nav() {
           <span style={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.2px', color: '#fff' }}>HookLens</span>
         </a>
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary navigation">
-          {[{ label: 'Product', href: '#features' }, { label: 'Docs', href: '#' }, { label: 'GitHub', href: 'https://github.com' }].map(({ label, href }) => (
+          {[{ label: 'Product', href: '#features' }, { label: 'Docs', href: '/docs' }, { label: 'GitHub', href: 'https://github.com/abubakar2906/hooklens' }].map(({ label, href }) => (
             <a key={label} href={href} className="nav-link">{label}</a>
           ))}
         </nav>
@@ -458,7 +458,7 @@ function Footer() {
         </div>
         <p className="text-center md:text-left" style={{ fontSize: '12px', color: '#2a2a2a' }} dangerouslySetInnerHTML={{ __html: '&copy; ' + new Date().getFullYear() + ' HookLens &middot; MIT License &middot; Built for African fintech' }}></p>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          {[{ label: 'GitHub', href: '#' }, { label: 'Docs', href: '#' }, { label: 'Waitlist', href: '/waitlist' }].map(({ label, href }) => (
+          {[{ label: 'GitHub', href: 'https://github.com/abubakar2906/hooklens' }, { label: 'Docs', href: '/docs' }, { label: 'Waitlist', href: '/waitlist' }].map(({ label, href }) => (
             <a key={label} href={href} className="footer-link">{label}</a>
           ))}
         </div>
