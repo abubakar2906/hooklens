@@ -1,0 +1,590 @@
+﻿import Link from 'next/link';
+import AnimatedBackground from '@/components/landing/animated-background';
+import ScrollReveal from '@/components/landing/scroll-reveal';
+import PayloadViewer from '@/components/landing/payload-viewer';
+import PageBackground from '@/components/landing/page-background';
+
+// â”€â”€â”€ Design tokens (Linear-inspired, DESIGN(1).md) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// canvas:    #010102  â€” near-black page background
+// surface-1: #0f1011  â€” feature cards, panels (one step above canvas)
+// surface-2: #141516  â€” hovered/featured cards
+// surface-3: #18191a  â€” sub-nav, dropdown menus
+// hairline:  #23252a  â€” 1px borders
+// ink:       #f7f8f8  â€” primary text
+// ink-muted: #d0d6e0  â€” secondary text
+// ink-subtle:#8a8f98  â€” tertiary text
+// primary:   #5e6ad2  â€” lavender, ONLY for: brand mark, primary CTA, focus ring, links
+// primary-hover: #828fff
+//
+// Typography: Inter 600 as display (SF Pro Display fallback), Inter 400 as body
+// Buttons: rounded-md (8px), padding 8px 14px â€” never pill-rounded
+// No gradients. No spotlight cards. Product UI screenshots are the protagonist.
+
+// â”€â”€â”€ Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function Nav() {
+  return (
+    <header
+      className="sticky top-0 z-50 border-b"
+      style={{
+        backgroundColor: '#010102',
+        borderColor: '#23252a',
+        height: '56px',
+      }}
+    >
+      <div className="mx-auto max-w-[1280px] px-6 h-full flex items-center justify-between">
+        {/* Wordmark */}
+        <Link
+          href="/"
+          className="flex items-center gap-2.5"
+          aria-label="HookLens home"
+        >
+          {/* Brand mark in lavender â€” the one permitted use */}
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 20 20"
+            className="flex-shrink-0"
+            aria-hidden="true"
+          >
+            <circle cx="10" cy="10" r="8" fill="none" stroke="#5e6ad2" strokeWidth="1.5" />
+            <circle cx="10" cy="10" r="3.5" fill="#5e6ad2" />
+            <path d="M10 3 L10 6.5 M10 13.5 L10 17 M3 10 L6.5 10 M13.5 10 L17 10" stroke="#5e6ad2" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+          <span
+            className="text-[#f7f8f8]"
+            style={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.2px' }}
+          >
+            HookLens
+          </span>
+        </Link>
+
+        {/* Nav links â€” body-sm weight, ink-subtle, hover lifts to ink */}
+        <nav className="hidden md:flex items-center gap-6" aria-label="Primary navigation">
+          {[
+            { label: 'Product', href: '#features' },
+            { label: 'Docs', href: '#' },
+            { label: 'GitHub', href: 'https://github.com' },
+          ].map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              className="text-[#8a8f98] hover:text-[#f7f8f8] transition-colors"
+              style={{ fontSize: '14px', fontWeight: 400 }}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+
+        {/* CTA pair */}
+        <div className="flex items-center gap-2">
+          {/* Secondary: surface-1, hairline border */}
+          <Link
+            href="/dashboard"
+            className="transition-colors"
+            style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              color: '#f7f8f8',
+              backgroundColor: '#0f1011',
+              border: '1px solid #23252a',
+              borderRadius: '8px',
+              padding: '8px 14px',
+              lineHeight: 1.2,
+            }}
+          >
+            Sign in
+          </Link>
+          {/* Primary: lavender â€” one of the few permitted uses */}
+          <Link
+            href="/dashboard"
+            className="transition-colors"
+            style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              color: '#ffffff',
+              backgroundColor: '#5e6ad2',
+              borderRadius: '8px',
+              padding: '8px 14px',
+              lineHeight: 1.2,
+            }}
+          >
+            Open dashboard
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+// â”€â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Linear pattern: Large headline flush-left, subhead below, product screenshot
+// as the dominant visual. No atmospheric gradients. No decorative background.
+function Hero() {
+  return (
+    // Relative container so AnimatedBackground positions within this region
+    <div className="relative overflow-hidden">
+      {/* Webhook-traffic network animation â€” pure SVG SMIL, no client JS */}
+      <div className="absolute inset-0 h-[700px]">
+        <AnimatedBackground />
+      </div>
+      {/* Fade mask: hard fade at bottom so section below reads cleanly */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-40 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, #010102)' }}
+        aria-hidden="true"
+      />
+      <section
+        aria-labelledby="hero-headline"
+        className="relative mx-auto max-w-[1280px] px-6"
+        style={{ paddingTop: '96px', paddingBottom: '64px', zIndex: 1 }}
+      >
+      {/* Eyebrow â€” positive tracking, ink-subtle â€” entrance animation via CSS */}
+      <p
+        className="text-[#8a8f98] uppercase mb-6"
+        style={{
+          fontSize: '13px',
+          fontWeight: 500,
+          letterSpacing: '0.4px',
+          animation: 'heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both',
+          animationDelay: '0ms',
+        }}
+      >
+        Open-source Â· Self-hosted Â· African Fintech
+      </p>
+      <style>{`
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* display-lg headline â€” 600 weight, -1.8px tracking */}
+      <h1
+        id="hero-headline"
+        className="text-[#f7f8f8] max-w-3xl"
+        style={{
+          fontSize: 'clamp(36px, 5vw, 56px)',
+          fontWeight: 600,
+          lineHeight: 1.1,
+          letterSpacing: '-1.8px',
+          animation: 'heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both',
+          animationDelay: '80ms',
+        }}
+      >
+        Webhook infrastructure{' '}
+        <span style={{ color: '#d0d6e0', fontWeight: 600 }}>
+          for fintech developers.
+        </span>
+      </h1>
+
+      {/* body-lg subhead */}
+      <p
+        className="text-[#8a8f98] mt-5 max-w-xl"
+        style={{ fontSize: '18px', fontWeight: 400, lineHeight: 1.5, letterSpacing: '-0.1px' }}
+      >
+        A self-hosted gateway for Paystack, Flutterwave, and Monnify webhooks.
+        Normalised ingestion, guaranteed delivery, automatic retries, and
+        AI-powered failure diagnostics.
+      </p>
+
+      {/* CTA row */}
+      <div className="flex items-center gap-3 mt-8 flex-wrap">
+        {/* Primary */}
+        <Link
+          href="/dashboard"
+          style={{
+            fontSize: '14px',
+            fontWeight: 500,
+            color: '#ffffff',
+            backgroundColor: '#5e6ad2',
+            borderRadius: '8px',
+            padding: '8px 14px',
+            lineHeight: 1.2,
+            display: 'inline-flex',
+            alignItems: 'center',
+          }}
+        >
+          Open dashboard
+        </Link>
+        {/* Tertiary: plain text */}
+        <a
+          href="https://github.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: '14px',
+            fontWeight: 400,
+            color: '#8a8f98',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+          }}
+        >
+          View on GitHub
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 10 L10 2 M4 2 L10 2 L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
+      </div>
+
+      {/* Product screenshot â€” surface-1 panel, rounded-xl (16px), full width */}
+      <div
+        className="mt-12 w-full overflow-hidden"
+        style={{
+          backgroundColor: '#0f1011',
+          border: '1px solid #23252a',
+          borderRadius: '16px',
+        }}
+        role="img"
+        aria-label="HookLens events dashboard â€” webhook events table with status, provider, and delivery details"
+      >
+        {/* Window chrome */}
+        <div
+          className="flex items-center justify-between px-4 border-b"
+          style={{ height: '40px', backgroundColor: '#0f1011', borderColor: '#23252a' }}
+        >
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#3a3a3a]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#3a3a3a]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#3a3a3a]" />
+            </div>
+            <span
+              className="text-[#62666d] ml-2"
+              style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}
+            >
+              hooklens Â· events
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full"
+            style={{ backgroundColor: '#141516', border: '1px solid #23252a' }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#27a644]" />
+            <span className="text-[#8a8f98]" style={{ fontSize: '11px' }}>Live</span>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div
+          className="flex items-center gap-4 px-4 border-b"
+          style={{ height: '36px', borderColor: '#23252a' }}
+        >
+          {['All Events', 'Failed', 'Retrying', 'Queued'].map((tab, i) => (
+            <span
+              key={tab}
+              style={{
+                fontSize: '13px',
+                fontWeight: i === 0 ? 500 : 400,
+                color: i === 0 ? '#f7f8f8' : '#62666d',
+                borderBottom: i === 0 ? '1px solid #f7f8f8' : 'none',
+                paddingBottom: '1px',
+              }}
+            >
+              {tab}
+            </span>
+          ))}
+        </div>
+
+        {/* Table header */}
+        <div
+          className="grid px-4 py-2 border-b"
+          style={{
+            gridTemplateColumns: '110px 100px 1fr 70px 80px 90px',
+            borderColor: '#23252a',
+            backgroundColor: '#0a0a0b',
+          }}
+        >
+          {['Status', 'Provider', 'Destination', 'Attempts', 'Latency', 'Received'].map((h) => (
+            <span
+              key={h}
+              className="text-[#62666d] uppercase"
+              style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.3px', fontFeatureSettings: '"tnum"' }}
+            >
+              {h}
+            </span>
+          ))}
+        </div>
+
+        {/* Table rows */}
+        <div>
+          {[
+            { id: 'evt_9f2a1c3d', status: 'success',  provider: 'Paystack',    dest: 'api.acme.io/hooks',      attempts: 1, latency: '124ms', time: '2s ago'    },
+            { id: 'evt_b7e4f091', status: 'success',  provider: 'Flutterwave', dest: 'api.acme.io/hooks',      attempts: 1, latency: '98ms',  time: '14s ago'   },
+            { id: 'evt_3d8c2a5e', status: 'failed',   provider: 'Monnify',     dest: 'staging.acme.io/webhooks', attempts: 5, latency: 'â€”',    time: '2m ago'    },
+            { id: 'evt_a1f709bc', status: 'retrying', provider: 'Paystack',    dest: 'api.acme.io/hooks',      attempts: 3, latency: '412ms', time: '5m ago'    },
+            { id: 'evt_c5d3e847', status: 'success',  provider: 'Flutterwave', dest: 'prod.acme.io/events',    attempts: 1, latency: '77ms',  time: '8m ago'    },
+            { id: 'evt_f2b890a1', status: 'queued',   provider: 'Paystack',    dest: 'api.acme.io/hooks',      attempts: 0, latency: 'â€”',     time: 'just now'  },
+          ].map((ev, i) => {
+            const statusStyles: Record<string, { dot: string; label: string; text: string }> = {
+              success:  { dot: '#27a644', label: '#27a644', text: 'Delivered'  },
+              failed:   { dot: '#e54d2e', label: '#e54d2e', text: 'Failed'     },
+              retrying: { dot: '#e5a000', label: '#e5a000', text: 'Retrying'   },
+              queued:   { dot: '#8a8f98', label: '#8a8f98', text: 'Queued'     },
+            };
+            const s = statusStyles[ev.status];
+            return (
+              <div
+                key={ev.id}
+                className="grid items-center px-4 py-2.5 border-b transition-colors"
+                style={{
+                  gridTemplateColumns: '110px 100px 1fr 70px 80px 90px',
+                  borderColor: '#1a1b1e',
+                  backgroundColor: i % 2 === 0 ? 'transparent' : '#0a0a0b',
+                  cursor: 'default',
+                }}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: s.dot }}
+                  />
+                  <span style={{ fontSize: '13px', color: s.label, fontWeight: 400 }}>{s.text}</span>
+                </span>
+                <span style={{ fontSize: '13px', color: '#d0d6e0' }}>{ev.provider}</span>
+                <span
+                  className="text-[#8a8f98] truncate"
+                  style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', fontFeatureSettings: '"tnum"' }}
+                >
+                  {ev.dest}
+                </span>
+                <span
+                  className="text-[#62666d]"
+                  style={{ fontSize: '13px', fontFeatureSettings: '"tnum"' }}
+                >
+                  {ev.attempts}
+                </span>
+                <span
+                  className="text-[#62666d]"
+                  style={{ fontSize: '13px', fontFeatureSettings: '"tnum"' }}
+                >
+                  {ev.latency}
+                </span>
+                <span
+                  className="text-[#62666d]"
+                  style={{ fontSize: '12px' }}
+                >
+                  {ev.time}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const FEATURES = [
+  {
+    id: 'sig',
+    eyebrow: 'Authentication',
+    title: 'Provider signatures verified automatically',
+    body: 'Paystack, Flutterwave, and Monnify signatures are verified per-endpoint before entering your queue.',
+    code: 'x-paystack-signature: sha512=...'
+  },
+  {
+    id: 'ai',
+    eyebrow: 'Observability',
+    title: 'AI-assisted failure diagnostics',
+    body: 'Instant insights into why a delivery failed, analyzing headers, payloads, and your downstream server response.',
+    code: 'Diagnostic: 502 Bad Gateway. Upstream unresponsive.'
+  },
+  {
+    id: 'replay',
+    eyebrow: 'Resilience',
+    title: 'Zero-downtime event replays',
+    body: 'Replay failed events individually or in bulk. HookLens maintains the original timestamp and payload integrity.',
+    code: 'POST /api/webhooks/replay'
+  },
+  {
+    id: 'retry',
+    eyebrow: 'Reliability',
+    title: 'Automatic exponential backoff',
+    body: 'Configurable retry policies handle transient network errors and downstream server restarts gracefully.',
+    code: 'retry_policy: { max: 5, backoff: "exponential" }'
+  },
+  {
+    id: 'logs',
+    eyebrow: 'Visibility',
+    title: 'Real-time delivery logs',
+    body: 'Filter events by provider, status, or date range. Search payloads and headers with zero indexing delay.',
+    code: 'status: "failed" provider: "monnify"'
+  },
+  {
+    id: 'local',
+    eyebrow: 'Development',
+    title: 'Secure local development tunnels',
+    body: 'Receive webhooks on localhost without exposing your machine to the public internet.',
+    code: 'hooklens listen 3000'
+  }
+];
+
+function FeaturesSection() {
+  return (
+    <section
+      id="features"
+      aria-labelledby="features-heading"
+      className="mx-auto max-w-[1280px] px-6 relative"
+      style={{ paddingTop: '96px', paddingBottom: '96px' }}
+    >
+      <ScrollReveal>
+        <div className="flex flex-col items-center text-center mb-16 relative z-10">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] pointer-events-none" 
+               style={{ background: 'radial-gradient(ellipse, rgba(94,106,210,0.08) 0%, rgba(94,106,210,0) 60%)', zIndex: -1 }} />
+          <p
+            className="text-[#5e6ad2] uppercase mb-4 tracking-wider"
+            style={{ fontSize: '12px', fontWeight: 600 }}
+          >
+            Capabilities
+          </p>
+          <h2
+            id="features-heading"
+            className="text-[#f7f8f8] mb-4 max-w-2xl mx-auto"
+            style={{
+              fontSize: 'clamp(32px, 4vw, 48px)',
+              fontWeight: 700,
+              lineHeight: 1.1,
+              letterSpacing: '-1.5px',
+            }}
+          >
+            Infrastructure for the full webhook lifecycle
+          </h2>
+          <p
+            className="text-[#8a8f98] max-w-lg mx-auto"
+            style={{ fontSize: '18px', fontWeight: 400, lineHeight: 1.6 }}
+          >
+            From signature verification to AI-assisted diagnostics â€” every stage
+            handled, observable, and replayable.
+          </p>
+        </div>
+      </ScrollReveal>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+        {FEATURES.map((f, i) => (
+          <ScrollReveal key={f.id} delay={i * 100}>
+            <div
+              className="flex flex-col h-full group transition-all duration-300 hover:-translate-y-1 relative"
+              style={{
+                backgroundColor: '#0f1011',
+                padding: '32px',
+                borderRadius: '16px',
+                border: '1px solid #23252a',
+                boxShadow: '0 4px 24px -8px rgba(0,0,0,0.5)',
+              }}
+            >
+              <div className="absolute inset-0 rounded-[16px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                   style={{ boxShadow: 'inset 0 0 0 1px rgba(94,106,210,0.3), 0 0 40px -10px rgba(94,106,210,0.1)' }} />
+              
+              <p
+                className="text-[#62666d] uppercase mb-4 tracking-widest relative z-10"
+                style={{ fontSize: '11px', fontWeight: 600 }}
+              >
+                {f.eyebrow}
+              </p>
+              
+              <h3
+                className="text-[#f7f8f8] mb-3 group-hover:text-[#5e6ad2] transition-colors relative z-10"
+                style={{ fontSize: '20px', fontWeight: 600, lineHeight: 1.3, letterSpacing: '-0.5px' }}
+              >
+                {f.title}
+              </h3>
+              
+              <p
+                className="text-[#8a8f98] mb-6 flex-grow relative z-10"
+                style={{ fontSize: '15px', fontWeight: 400, lineHeight: 1.6 }}
+              >
+                {f.body}
+              </p>
+
+              <div 
+                className="mt-auto p-3 rounded-lg overflow-hidden relative z-10"
+                style={{ backgroundColor: '#0a0a0b', border: '1px solid #1a1b1e' }}
+              >
+                <code className="text-[#62666d] block truncate" style={{ fontFamily: 'ui-monospace, JetBrains Mono, monospace', fontSize: '12px' }}>
+                  {f.code}
+                </code>
+              </div>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+    </section>
+                className="text-[#f7f8f8]"
+                style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '-0.2px' }}
+              >
+                HookLens
+              </span>
+            </div>
+            <p
+              className="text-[#62666d]"
+              style={{ fontSize: '13px', fontWeight: 400, lineHeight: 1.6, maxWidth: '220px' }}
+            >
+              Webhook gateway for African fintech. Open-source, self-hosted.
+            </p>
+          </div>
+
+          {/* Link columns */}
+          {FOOTER_LINKS.map((col) => (
+            <div key={col.heading}>
+              <p
+                className="text-[#f7f8f8] mb-4"
+                style={{ fontSize: '12px', fontWeight: 500 }}
+              >
+                {col.heading}
+              </p>
+              <ul className="flex flex-col gap-3">
+                {col.links.map(({ label, href }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="text-[#62666d] hover:text-[#8a8f98] transition-colors"
+                      style={{ fontSize: '13px', fontWeight: 400 }}
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-6 border-t"
+          style={{ borderColor: '#23252a' }}
+        >
+          <p
+            className="text-[#62666d]"
+            style={{ fontSize: '12px' }}
+          >
+            Ã‚Â© {year} HookLens. Released under the MIT License.
+          </p>
+          <p
+            className="text-[#62666d]"
+            style={{ fontSize: '12px' }}
+          >
+            Built for developers building in Africa.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Landing Page Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+export default function LandingPage() {
+  return (
+    <div style={{ backgroundColor: '#010102', minHeight: '100vh', fontFeatureSettings: '"ss01"' }}>
+      <Nav />
+      <Hero />
+      <FeaturesSection />
+      <IntegrationsSection />
+      <ProductPreviewSection />
+      <PricingSection />
+      <FAQSection />
+      <Footer />
+    </div>
+  );
+}

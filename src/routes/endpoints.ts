@@ -6,6 +6,7 @@ const router = Router();
 const VALID_PROVIDERS = ['paystack', 'flutterwave', 'monnify', 'generic'] as const;
 type ProviderType = typeof VALID_PROVIDERS[number];
 
+// POST /api/endpoints
 router.post('/', async (req: Request, res: Response): Promise<void> => {
     const { url, provider_type, secret } = req.body as {
         url: string;
@@ -32,7 +33,6 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
        RETURNING id, url, provider_type, created_at`,
             [url, provider_type, secret ?? null]
         );
-
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error('[Endpoints] Create error:', err);
@@ -40,12 +40,25 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     }
 });
 
+// GET /api/endpoints — includes per-endpoint stats for the dashboard
 router.get('/', async (_req: Request, res: Response): Promise<void> => {
     try {
         const result = await pool.query(
-            `SELECT id, url, provider_type, created_at
-       FROM endpoints
-       ORDER BY created_at DESC`
+            `SELECT
+         ep.id,
+         ep.url,
+         ep.provider_type,
+         ep.created_at,
+         COUNT(e.id)::int                                                                                AS total_events,
+         COUNT(e.id) FILTER (WHERE e.created_at > NOW() - INTERVAL '24 hours')::int                    AS events_today,
+         ROUND(
+           COUNT(e.id) FILTER (WHERE e.status = 'success' AND e.created_at > NOW() - INTERVAL '24 hours')::numeric /
+           NULLIF(COUNT(e.id) FILTER (WHERE e.created_at > NOW() - INTERVAL '24 hours'), 0) * 100, 1
+         ) AS success_rate
+       FROM endpoints ep
+       LEFT JOIN events e ON e.endpoint_id = ep.id
+       GROUP BY ep.id
+       ORDER BY ep.created_at DESC`
         );
         res.json(result.rows);
     } catch (err) {
@@ -54,6 +67,7 @@ router.get('/', async (_req: Request, res: Response): Promise<void> => {
     }
 });
 
+// GET /api/endpoints/:id/events
 router.get('/:id/events', async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 

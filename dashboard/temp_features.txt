@@ -1,0 +1,139 @@
+﻿
+> function FeaturesSection() {
+    return (
+      <section
+        id="features"
+        aria-labelledby="features-heading"
+        className="mx-auto max-w-[1280px] px-6"
+        style={{ paddingTop: '96px', paddingBottom: '96px' }}
+      >
+        {/* Section header */}
+        <p
+          className="text-[#8a8f98] uppercase mb-4"
+          style={{ fontSize: '13px', fontWeight: 500, letterSpacing: '0.4px' }}
+        >
+          Capabilities
+        </p>
+        <h2
+          id="features-heading"
+          className="text-[#f7f8f8] mb-4 max-w-2xl"
+          style={{
+            fontSize: 'clamp(28px, 3.5vw, 40px)',
+            fontWeight: 600,
+            lineHeight: 1.15,
+            letterSpacing: '-1.0px',
+          }}
+        >
+          Infrastructure for the full webhook lifecycle
+        </h2>
+        <p
+          className="text-[#8a8f98] mb-16 max-w-lg"
+          style={{ fontSize: '16px', fontWeight: 400, lineHeight: 1.5 }}
+        >
+          From signature verification to AI-assisted diagnostics â€” every stage
+          handled, observable, and replayable.
+        </p>
+  
+        {/* Feature card grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px"
+          style={{ backgroundColor: '#23252a' }}
+        >
+          {FEATURES.map((f) => (
+            <div
+              key={f.id}
+              className="flex flex-col"
+              style={{
+                backgroundColor: '#0f1011',
+                padding: '24px',
+              }}
+            >
+              {/* Eyebrow */}
+              <p
+                className="text-[#62666d] uppercase mb-3"
+                style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.4px' }}
+              >
+                {f.eyebrow}
+              </p>
+  
+              {/* Proof table â€” only on signature card */}
+              {f.proof && (
+                <div
+                  className="mb-4 overflow-hidden"
+                  style={{ border: '1px solid #23252a', borderRadius: '6px' }}
+                  role="table"
+                >
+                  <div
+                    className="grid border-b"
+                    style={{ gridTemplateColumns: '1fr 1.6fr 1fr', borderColor: '#23252a', backgroundColor: '#141516' 
+}}
+                  >
+                    {['Provider', 'Header', 'Algorithm'].map((h) => (
+                      <span
+                        key={h}
+                        className="text-[#62666d] uppercase px-3 py-2"
+                        style={{ fontSize: '10px', fontWeight: 500, letterSpacing: '0.3px', fontFeatureSettings: 
+'"tnum"' }}
+                      >
+                        {h}
+                      </span>
+                    ))}
+                  </div>
+                  {f.proof.map(({ provider, header, algo }, i) => (
+                    <div
+                      key={provider}
+                      className="grid"
+                      style={{
+                        gridTemplateColumns: '1fr 1.6fr 1fr',
+                        borderBottom: i < f.proof!.length - 1 ? '1px solid #23252a' : 'none',
+                      }}
+                    >
+                      <span className="px-3 py-2 text-[#d0d6e0]" style={{ fontSize: '12px' }}>{provider}</span>
+                      <span
+                        className="px-3 py-2 text-[#8a8f98] border-l border-r"
+                        style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', borderColor: '#23252a', 
+fontFeatureSettings: '"tnum"' }}
+                      >
+                        {header}
+                      </span>
+                      <span className="px-3 py-2 text-[#62666d]" style={{ fontSize: '11px', fontFeatureSettings: 
+'"tnum"' }}>{algo}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+  
+              {/* card-title */}
+              <h3
+                className="text-[#f7f8f8] mb-2"
+                style={{ fontSize: '15px', fontWeight: 500, lineHeight: 1.35, letterSpacing: '-0.2px' }}
+              >
+                {f.title}
+              </h3>
+              {/* body-sm */}
+              <p
+                className="text-[#62666d]"
+                style={{ fontSize: '14px', fontWeight: 400, lineHeight: 1.55 }}
+              >
+                {f.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+  
+  // â”€â”€â”€ Product Preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â
+”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Linear pattern: Full-width surface-1 panel on canvas, showing a real event detail
+  // view with JSON payload on the left and delivery timeline + AI diagnostics on the right.
+  // The panel IS the decoration. No atmospheric backgrounds.
+  function ProductPreviewSection() {
+    return (
+      <section
+        aria-labelledby="preview-heading"
+        style={{ backgroundColor: '#010102', paddingTop: '0', paddingBottom: '96px' }}
+      >
+        <div className="mx-auto max-w-[1280px] px-6">
+
+

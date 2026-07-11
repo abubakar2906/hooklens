@@ -1,12 +1,21 @@
 import 'dotenv/config';
+import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
 import { config } from './config';
 import { pool } from './db';
 import webhookRoutes from './routes/webhook';
 import endpointRoutes from './routes/endpoints';
+import eventRoutes from './routes/events';
+import statsRoutes from './routes/stats';
 import { deliveryWorker } from './workers/delivery';
 
 const app = express();
+
+app.use(cors({
+    origin: process.env.DASHBOARD_URL || 'http://localhost:3001',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+}));
 
 app.use(
     express.json({
@@ -18,6 +27,8 @@ app.use(
 
 app.use('/webhooks', webhookRoutes);
 app.use('/api/endpoints', endpointRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/stats', statsRoutes);
 
 app.get('/health', (_req, res) => {
     res.json({
@@ -39,16 +50,9 @@ const server = app.listen(config.port, () => {
 
 async function shutdown(signal: string): Promise<void> {
     console.log(`\n[Server] Received ${signal}, shutting down gracefully...`);
-
     server.close(async () => {
-        console.log('[Server] HTTP server closed');
-
         await deliveryWorker.close();
-        console.log('[Worker] Closed');
-
         await pool.end();
-        console.log('[DB] Pool closed');
-
         process.exit(0);
     });
 }

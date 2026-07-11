@@ -1,0 +1,207 @@
+﻿
+> function IntegrationsSection() {
+    return (
+      <section
+        aria-labelledby="integrations-heading"
+        className="mx-auto max-w-[1280px] px-6"
+        style={{ paddingTop: '0', paddingBottom: '96px' }}
+      >
+        {/* Thin rule from previous section */}
+        <div className="border-t mb-16" style={{ borderColor: '#23252a' }} />
+  
+        {/* Header */}
+        <p
+          className="text-[#8a8f98] uppercase mb-4"
+          style={{ fontSize: '13px', fontWeight: 500, letterSpacing: '0.4px' }}
+        >
+          Integrations
+        </p>
+        <h2
+          id="integrations-heading"
+          className="text-[#f7f8f8] mb-4 max-w-2xl"
+          style={{ fontSize: 'clamp(28px, 3.5vw, 40px)', fontWeight: 600, lineHeight: 1.15, letterSpacing: '-1.0px' }}
+        >
+          Works with your entire stack
+        </h2>
+        <p
+          className="text-[#8a8f98] mb-14 max-w-lg"
+          style={{ fontSize: '16px', fontWeight: 400, lineHeight: 1.5 }}
+        >
+          Native signature verification for the three largest African payment gateways.
+          Forwards to any HTTP endpoint â€” framework and hosting agnostic.
+        </p>
+  
+        {/* â”€â”€ Webhook Sources â”€â”€ */}
+        <p
+          className="text-[#62666d] uppercase mb-4"
+          style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.4px' }}
+        >
+          Webhook Sources
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+          {PROVIDERS.map((p) => (
+            <div
+              key={p.id}
+              className="flex flex-col"
+              style={{
+                backgroundColor: '#0f1011',
+                border: '1px solid #23252a',
+                borderRadius: '12px',
+                padding: '24px',
+              }}
+            >
+              {/* Header row */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className="flex items-center justify-center flex-shrink-0"
+                    style={{ width: '32px', height: '32px', backgroundColor: '#141516', borderRadius: '8px', border: 
+'1px solid #23252a' }}
+                  >
+                    <ProviderMark id={p.id} />
+                  </div>
+                  <div>
+                    <p className="text-[#f7f8f8]" style={{ fontSize: '14px', fontWeight: 500, lineHeight: 1.2 }}>
+                      {p.name}
+                    </p>
+                    <p className="text-[#62666d]" style={{ fontSize: '11px', marginTop: '2px' }}>
+                      {p.region}
+                    </p>
+                  </div>
+                </div>
+                {/* Supported badge â€” semantic success only */}
+                <span
+                  className="flex items-center gap-1 flex-shrink-0"
+                  style={{
+                    backgroundColor: 'rgba(39,166,68,0.10)',
+                    border: '1px solid rgba(39,166,68,0.20)',
+                    borderRadius: '9999px',
+                    padding: '2px 8px',
+                    fontSize: '11px',
+                    fontWeight: 500,
+                    color: '#27a644',
+                  }}
+                >
+                  <span className="w-1 h-1 rounded-full bg-[#27a644]" />
+                  Supported
+                </span>
+              </div>
+  
+              {/* Algorithm + header */}
+              <div
+                className="mb-4"
+                style={{ borderTop: '1px solid #1a1b1e', paddingTop: '16px' }}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[#62666d]" style={{ fontSize: '11px' }}>Algorithm</span>
+                  <span
+                    className="text-[#8a8f98]"
+                    style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', fontFeatureSettings: '"tnum"' }}
+                  >
+                    {p.algo}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[#62666d]" style={{ fontSize: '11px' }}>Header</span>
+                  <span
+                    className="text-[#8a8f98] truncate ml-4"
+                    style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', maxWidth: '160px', textAlign: 
+'right' }}
+                  >
+                    {p.header}
+                  </span>
+                </div>
+              </div>
+  
+              {/* Example events */}
+              <div style={{ borderTop: '1px solid #1a1b1e', paddingTop: '14px' }}>
+                <p className="text-[#62666d] mb-2" style={{ fontSize: '11px' }}>Example events</p>
+                <div className="flex flex-col gap-1.5">
+                  {p.events.map((ev) => (
+                    <span
+                      key={ev}
+                      className="text-[#8a8f98]"
+                      style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px' }}
+                    >
+                      {ev}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+  
+        {/* â”€â”€ Destinations â”€â”€ */}
+        <p
+          className="text-[#62666d] uppercase mb-4"
+          style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.4px' }}
+        >
+          Destination Environments
+        </p>
+        {/* Gap-px hairline grid â€” same treatment as feature cards */}
+        <div
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px"
+          style={{ backgroundColor: '#23252a' }}
+        >
+          {DESTINATIONS.map((d) => (
+            <div
+              key={d.id}
+              className="flex flex-col gap-2 hover:bg-[#141516] transition-colors"
+              style={{ backgroundColor: '#0f1011', padding: '16px' }}
+            >
+              <IconMark id={d.id} />
+              <p
+                className="text-[#d0d6e0]"
+                style={{ fontSize: '13px', fontWeight: 500, lineHeight: 1.2 }}
+              >
+                {d.name}
+              </p>
+              <p
+                className="text-[#62666d]"
+                style={{ fontSize: '11px' }}
+              >
+                {d.lang}
+              </p>
+            </div>
+          ))}
+        </div>
+        {/* Closing note */}
+        <p
+          className="text-[#62666d] mt-4"
+          style={{ fontSize: '13px', fontWeight: 400 }}
+        >
+          Any HTTP server that can receive a POST request. HookLens is framework-agnostic.
+        </p>
+      </section>
+    );
+  }
+  
+  // â”€â”€â”€ Pricing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // HookLens is open-source and self-hosted first. Pricing reflects that honestly.
+  // Three plans: Open Source (free, self-host), Cloud (managed, coming soon),
+  // Enterprise (custom support). No made-up feature counts; just what's real.
+  
+  const PLANS = [
+    {
+      id: 'oss',
+      name: 'Open Source',
+      price: '$0',
+      period: 'free forever',
+      description: 'Self-host on your own infrastructure. Full source code under MIT license.',
+      cta: { label: 'Get started', href: 'https://github.com', variant: 'secondary' },
+      featured: false,
+      features: [
+        'Paystack, Flutterwave, Monnify ingestion',
+        'BullMQ-powered async delivery',
+        'Exponential backoff retry (5 attempts)',
+        'Full delivery attempt history',
+        'AI failure diagnostics (bring your own key)',
+        'Event replay from dashboard',
+        'MIT License â€” modify freely',
+        'Community support (GitHub Issues)',
+      ],
+      note: 'Requires Node.js â‰¥ 18, Redis, and PostgreSQL.',
+
+
