@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useClerk } from '@clerk/nextjs';
 import { useEffect } from 'react';
 
 // Minimal Inline SVG Icons mimicking Linear's fine-line aesthetic
@@ -101,11 +102,12 @@ interface SidebarProps {
 export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMobile }: SidebarProps) {
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+  const { signOut } = useClerk();
 
   // Close mobile sidebar on route change
   useEffect(() => {
     onCloseMobile();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const content = (
@@ -113,7 +115,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
       "flex flex-col border-r bg-surface-1 border-hairline font-sans h-full transition-all duration-300 overflow-hidden",
       isCollapsed ? "w-[68px]" : "w-[240px]"
     )}>
-      
+
       {/* Workspace Switcher / Logo & Controls */}
       <div className={cn(
         "flex items-center h-[56px] flex-shrink-0 border-b border-transparent transition-colors",
@@ -127,7 +129,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
             </div>
           )}
         </Link>
-        
+
         {/* Toggle / Close Buttons */}
         <div className="flex items-center">
           {/* Mobile close button inside sidebar header */}
@@ -137,8 +139,8 @@ export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
             </button>
           )}
           {/* Desktop collapse toggle */}
-          <button 
-            onClick={onToggleCollapse} 
+          <button
+            onClick={onToggleCollapse}
             className="hidden md:flex p-1.5 rounded-md text-ink-subtle hover:text-ink hover:bg-surface-2 transition-colors"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
@@ -198,12 +200,22 @@ export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
           <IconSettings className={cn('h-4 w-4 flex-shrink-0', isActive('/settings') ? 'text-ink' : 'text-ink-subtle')} />
           {!isCollapsed && "Settings"}
         </Link>
-        
+
         {/* User Profile Footer */}
         <div className={cn(
           "mt-4 flex items-center cursor-pointer hover:bg-surface-2 rounded-md transition-colors",
           isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-2"
         )}>
+          <button
+            type="button"
+            onClick={() => signOut({ redirectUrl: '/sign-in' })}
+            title={isCollapsed ? 'Log out' : undefined}
+            className={cn(
+              'mt-4 w-full flex items-center cursor-pointer hover:bg-surface-2 rounded-md transition-colors text-left',
+              isCollapsed ? 'justify-center p-2' : 'gap-3 px-3 py-2'
+            )}
+          ></button>
+
           <div className="w-6 h-6 rounded-full bg-[#1e2025] border border-hairline flex items-center justify-center flex-shrink-0">
             <span className="text-ink-muted text-[10px] font-medium">HL</span>
           </div>
@@ -230,7 +242,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
         isMobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       )}>
         {/* Backdrop */}
-        <div 
+        <div
           className="absolute inset-0 bg-[#010102]/80 backdrop-blur-sm"
           onClick={onCloseMobile}
         />

@@ -1,3 +1,6 @@
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 export default function SettingsPage() {
   return (
     <div className="p-6 max-w-[800px] mx-auto animate-fade-in-up font-sans">
@@ -12,13 +15,13 @@ export default function SettingsPage() {
           <div className="flex items-center gap-3">
             <input
               type="text"
-              defaultValue="http://localhost:3000"
+              defaultValue={apiUrl}
               readOnly
               className="flex-1 bg-surface-2 border border-hairline rounded-md px-3 py-2 text-[13px] text-ink-muted font-mono focus:outline-none"
             />
             <span className="text-[10px] text-ink-tertiary font-medium bg-background border border-hairline px-2 py-1 rounded-md">Read-only</span>
           </div>
-          <p className="text-ink-tertiary text-[12px] mt-2">Set <span className="font-mono text-[11px]">NEXT_PUBLIC_API_URL</span> in .env.local to change</p>
+          <p className="text-ink-tertiary text-[12px] mt-2">Configured by the deployment environment</p>
         </div>
 
         <div className="border-t border-hairline pt-6">
