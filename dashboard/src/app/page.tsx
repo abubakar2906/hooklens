@@ -83,7 +83,7 @@ function Hero() {
         Webhook infrastructure <span style={{ color: '#333' }}>for fintech developers.</span>
       </h1>
       <p style={{ fontSize: '18px', color: '#555', lineHeight: 1.55, maxWidth: '540px', marginTop: '24px', animation: 'heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both', animationDelay: '120ms' }}>
-        A self-hosted gateway for <strong style={{ color: '#27a644', fontWeight: 600 }}>Paystack</strong> webhooks &mdash; with Flutterwave and Monnify coming soon. Normalised ingestion, guaranteed delivery, automatic retries, and AI-powered failure diagnostics.
+        A self-hosted gateway for <strong style={{ color: '#27a644', fontWeight: 600 }}>Paystack </strong> webhooks &mdash; with Flutterwave and Monnify coming soon. Normalised ingestion, guaranteed delivery, automatic retries, and AI-powered failure diagnostics.
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '32px', flexWrap: 'wrap', animation: 'heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both', animationDelay: '160ms' }}>
         <a href="/sign-up" style={{ fontSize: '14px', fontWeight: 500, color: '#000', backgroundColor: '#fff', borderRadius: '8px', padding: '10px 20px', display: 'inline-flex', alignItems: 'center' }}>Get started free</a>
