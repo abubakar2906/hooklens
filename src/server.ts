@@ -11,10 +11,23 @@ import { deliveryWorker } from './workers/delivery';
 
 const app = express();
 
+const allowedOrigins = (process.env.DASHBOARD_URL || 'http://localhost:3001')
+    .split(',')
+    .map((o) => o.trim());
+
 app.use(cors({
-    origin: process.env.DASHBOARD_URL || 'http://localhost:3001',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. curl, Render health checks)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            callback(null, origin);
+        } else {
+            callback(new Error(`CORS: origin '${origin}' not allowed`));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 }));
 
 app.use(
