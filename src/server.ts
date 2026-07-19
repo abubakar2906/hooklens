@@ -13,8 +13,8 @@ const app = express();
 
 app.use(cors({
     origin: process.env.DASHBOARD_URL || 'http://localhost:3001',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(
@@ -25,7 +25,10 @@ app.use(
     })
 );
 
+import { requireAuth } from './middleware/auth';
+
 app.use('/webhooks', webhookRoutes);
+app.use('/api', requireAuth);
 app.use('/api/endpoints', endpointRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/stats', statsRoutes);
@@ -38,9 +41,9 @@ app.get('/health', (_req, res) => {
     });
 });
 
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     console.error('[Server] Unhandled error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(err.statusCode || 500).json({ error: err.message || 'Internal server error', details: err });
 });
 
 const server = app.listen(config.port, () => {

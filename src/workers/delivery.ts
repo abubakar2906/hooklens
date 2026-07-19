@@ -11,11 +11,7 @@ async function processDelivery(job: Job<DeliveryJobData>): Promise<void> {
 
     // attemptsMade is 0-indexed — it reflects how many attempts happened
     // before this one. Adding 1 gives a human-readable 1-5 attempt number.
-    const attemptNumber = job.attemptsMade + 1;
 
-    console.log(
-        `[Worker] Job ${job.id} → attempt ${attemptNumber}/${RETRY_CONFIG.attempts} for event ${eventId}`
-    );
 
     const result = await pool.query<{
         id: string;
@@ -39,6 +35,20 @@ async function processDelivery(job: Job<DeliveryJobData>): Promise<void> {
     }
 
     const event = result.rows[0];
+    const attemptResult = await pool.query<{ attempt_number: string }>(
+        `SELECT COALESCE(MAX(attempt_number), 0) + 1 AS attempt_number
+        FROM deliveries
+        WHERE event_id = $1`,
+        [eventId]
+    );
+
+    const attemptNumber = Number(attemptResult.rows[0].attempt_number);
+
+    console.log(
+        `[Worker] Job ${job.id} → attempt ${attemptNumber}/${RETRY_CONFIG.attempts} for event ${eventId}`
+    );
+
+
 
     if (event.status === 'success') {
         console.log(`[Worker] Event ${eventId} already delivered — skipping`);

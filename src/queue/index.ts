@@ -1,13 +1,22 @@
 import { Queue } from 'bullmq';
-import IORedis from 'ioredis';
 import { config } from '../config';
 
-const isTlsRedis = config.redisUrl.startsWith('rediss://');
+const redisUrl = new URL(config.redisUrl);
 
-export const redisConnection = new IORedis(config.redisUrl, {
+// Pass connection options to BullMQ instead of constructing an ioredis
+// client here. BullMQ ships its own compatible ioredis version, and sharing
+// a separately-installed client causes TypeScript and runtime incompatibility.
+export const redisConnection = {
+    host: redisUrl.hostname,
+    port: Number(redisUrl.port || 6379),
+    username: redisUrl.username || undefined,
+    password: redisUrl.password || undefined,
+    db: redisUrl.pathname && redisUrl.pathname !== '/' ? Number(redisUrl.pathname.slice(1)) : undefined,
     maxRetriesPerRequest: null,
-    tls: isTlsRedis ? { rejectUnauthorized: false } : undefined,
-});
+    ...(redisUrl.protocol === 'rediss:'
+        ? { tls: { rejectUnauthorized: false } }
+        : {}),
+};
 
 // Single source of truth for retry configuration.
 // Imported by both the webhook route (when enqueuing) and the worker
@@ -28,8 +37,4 @@ export const deliveryQueue = new Queue('webhook-delivery', {
         removeOnComplete: 100,
         removeOnFail: 500,
     },
-});
-
-redisConnection.on('error', (err) => {
-    console.error('[Redis] Connection error:', err);
 });

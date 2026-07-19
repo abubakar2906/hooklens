@@ -2,10 +2,33 @@ import type { Endpoint, WebhookEvent, EventDetail, Stats } from '@/types';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
+async function getAuthToken(): Promise<string | null> {
+    if (typeof window === 'undefined') {
+        const { auth } = await import('@clerk/nextjs/server');
+        const { getToken } = await auth();
+        return getToken();
+    } else {
+        // @ts-expect-error Clerk is globally available on window
+        if (window.Clerk?.session) {
+            // @ts-expect-error
+            return window.Clerk.session.getToken();
+        }
+        return null;
+    }
+}
+
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+    const token = await getAuthToken();
+    const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+    };
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const res = await fetch(`${API}${path}`, {
         ...options,
-        headers: { 'Content-Type': 'application/json', ...options?.headers },
+        headers: { ...headers, ...options?.headers },
         cache: 'no-store',
     });
 

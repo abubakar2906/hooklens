@@ -8,6 +8,12 @@ type ProviderType = typeof VALID_PROVIDERS[number];
 
 // POST /api/endpoints
 router.post('/', async (req: Request, res: Response): Promise<void> => {
+    const userId = req.auth.userId;
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+
     const { url, provider_type, secret } = req.body as {
         url: string;
         provider_type: ProviderType;
@@ -28,10 +34,10 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 
     try {
         const result = await pool.query(
-            `INSERT INTO endpoints (url, provider_type, secret)
-       VALUES ($1, $2, $3)
+            `INSERT INTO endpoints (url, provider_type, secret, user_id)
+       VALUES ($1, $2, $3, $4)
        RETURNING id, url, provider_type, created_at`,
-            [url, provider_type, secret ?? null]
+            [url, provider_type, secret ?? null, userId]
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -41,7 +47,13 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 });
 
 // GET /api/endpoints — includes per-endpoint stats for the dashboard
-router.get('/', async (_req: Request, res: Response): Promise<void> => {
+router.get('/', async (req: Request, res: Response): Promise<void> => {
+    const userId = req.auth.userId;
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+
     try {
         const result = await pool.query(
             `SELECT
@@ -57,8 +69,10 @@ router.get('/', async (_req: Request, res: Response): Promise<void> => {
          ) AS success_rate
        FROM endpoints ep
        LEFT JOIN events e ON e.endpoint_id = ep.id
+       WHERE ep.user_id = $1
        GROUP BY ep.id
-       ORDER BY ep.created_at DESC`
+       ORDER BY ep.created_at DESC`,
+            [userId]
         );
         res.json(result.rows);
     } catch (err) {
@@ -69,16 +83,22 @@ router.get('/', async (_req: Request, res: Response): Promise<void> => {
 
 // GET /api/endpoints/:id/events
 router.get('/:id/events', async (req: Request, res: Response): Promise<void> => {
+    const userId = req.auth.userId;
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
     const { id } = req.params;
 
     try {
         const result = await pool.query(
-            `SELECT id, status, created_at, updated_at
-       FROM events
-       WHERE endpoint_id = $1
-       ORDER BY created_at DESC
+            `SELECT e.id, e.status, e.created_at, e.updated_at
+       FROM events e
+       JOIN endpoints ep ON ep.id = e.endpoint_id
+       WHERE e.endpoint_id = $1 AND ep.user_id = $2
+       ORDER BY e.created_at DESC
        LIMIT 50`,
-            [id]
+            [id, userId]
         );
         res.json(result.rows);
     } catch (err) {

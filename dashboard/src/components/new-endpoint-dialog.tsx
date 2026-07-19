@@ -1,9 +1,27 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
+
+// Custom Minimal Icons
+function IconPlus({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M8 3.5V12.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3.5 8H12.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function IconX({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M4.5 4.5L11.5 11.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4.5 11.5L11.5 4.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 const PROVIDERS = [
   { value: 'paystack', label: 'Paystack', desc: 'HMAC-SHA512 signature via x-paystack-signature' },
@@ -55,50 +73,50 @@ export function NewEndpointDialog({ open, onClose, onCreated }: NewEndpointDialo
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 font-sans">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-fade-in"
+        className="absolute inset-0 bg-[#010102]/80 backdrop-blur-sm animate-fade-in"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-lg bg-[#111111] border border-[#222222] rounded-2xl shadow-2xl animate-fade-in-up">
+      <div className="relative w-full max-w-lg bg-surface-1 border border-hairline rounded-xl shadow-2xl animate-fade-in-up">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1e1e1e]">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-hairline bg-surface-1 rounded-t-xl">
           <div>
-            <h2 className="text-white font-semibold text-base">New Connection</h2>
-            <p className="text-[#555555] text-xs mt-0.5">Register a webhook destination endpoint</p>
+            <h2 className="text-ink font-semibold text-[15px] tracking-tight">New Connection</h2>
+            <p className="text-ink-subtle text-[12px] mt-1">Register a webhook destination endpoint</p>
           </div>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-[#555555] hover:text-white hover:bg-[#1e1e1e] transition-colors"
+            className="w-8 h-8 rounded-md flex items-center justify-center text-ink-tertiary hover:text-ink hover:bg-surface-2 transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <IconX className="w-4 h-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Provider selector */}
           <div>
-            <label className="text-xs text-[#777777] font-medium uppercase tracking-wider block mb-2">
+            <label className="text-[11px] text-ink-subtle font-semibold uppercase tracking-[0.05em] block mb-3">
               Provider
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               {PROVIDERS.map((p) => (
                 <button
                   key={p.value}
                   type="button"
                   onClick={() => setProvider(p.value)}
                   className={cn(
-                    'text-left p-3 rounded-lg border transition-all text-sm',
+                    'text-left p-4 rounded-md border transition-all',
                     provider === p.value
-                      ? 'border-blue-500/50 bg-blue-500/10 text-white'
-                      : 'border-[#222222] bg-[#0d0d0d] text-[#666666] hover:border-[#333333] hover:text-white'
+                      ? 'border-ring bg-primary/10 text-ink'
+                      : 'border-hairline bg-background text-ink-subtle hover:border-hairline-strong hover:text-ink'
                   )}
                 >
-                  <div className="font-medium">{p.label}</div>
-                  <div className="text-[10px] mt-0.5 opacity-70 leading-tight">{p.desc}</div>
+                  <div className="font-semibold text-[13px]">{p.label}</div>
+                  <div className="text-[11px] mt-1 opacity-80 leading-snug">{p.desc}</div>
                 </button>
               ))}
             </div>
@@ -106,7 +124,7 @@ export function NewEndpointDialog({ open, onClose, onCreated }: NewEndpointDialo
 
           {/* Destination URL */}
           <div>
-            <label className="text-xs text-[#777777] font-medium uppercase tracking-wider block mb-2">
+            <label className="text-[11px] text-ink-subtle font-semibold uppercase tracking-[0.05em] block mb-3">
               Destination URL
             </label>
             <input
@@ -114,14 +132,14 @@ export function NewEndpointDialog({ open, onClose, onCreated }: NewEndpointDialo
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://your-app.com/webhooks/handler"
-              className="w-full bg-[#0d0d0d] border border-[#222222] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-[#444444] focus:outline-none focus:border-blue-500/50 focus:bg-[#0d0f12] transition-all font-mono"
+              className="w-full bg-background border border-hairline rounded-md px-3.5 py-2.5 text-[13px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-ring focus:ring-1 focus:ring-ring/50 transition-all font-mono"
             />
           </div>
 
           {/* Secret (conditional) */}
           {needsSecret && (
             <div>
-              <label className="text-xs text-[#777777] font-medium uppercase tracking-wider block mb-2">
+              <label className="text-[11px] text-ink-subtle font-semibold uppercase tracking-[0.05em] block mb-3">
                 Webhook Secret
               </label>
               <input
@@ -129,9 +147,9 @@ export function NewEndpointDialog({ open, onClose, onCreated }: NewEndpointDialo
                 value={secret}
                 onChange={(e) => setSecret(e.target.value)}
                 placeholder="Your provider webhook secret key"
-                className="w-full bg-[#0d0d0d] border border-[#222222] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-[#444444] focus:outline-none focus:border-blue-500/50 focus:bg-[#0d0f12] transition-all font-mono"
+                className="w-full bg-background border border-hairline rounded-md px-3.5 py-2.5 text-[13px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-ring focus:ring-1 focus:ring-ring/50 transition-all font-mono"
               />
-              <p className="text-[#444444] text-xs mt-1.5">
+              <p className="text-ink-tertiary text-[11px] mt-2">
                 Used for HMAC signature verification of incoming webhooks
               </p>
             </div>
@@ -139,26 +157,26 @@ export function NewEndpointDialog({ open, onClose, onCreated }: NewEndpointDialo
 
           {/* Error */}
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 text-sm text-red-400">
+            <div className="bg-destructive/10 border border-destructive/20 rounded-md px-4 py-3 text-[13px] font-medium text-destructive">
               {error}
             </div>
           )}
 
           {/* Actions */}
-          <div className="flex items-center gap-3 pt-1">
+          <div className="flex items-center gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-lg border border-[#222222] text-sm text-[#666666] hover:text-white hover:border-[#333333] transition-all"
+              className="flex-1 py-2.5 rounded-md border border-hairline text-[13px] font-medium text-ink-subtle hover:text-ink hover:bg-surface-2 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium transition-all flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 rounded-md bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-[13px] font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
+              <IconPlus className="w-4 h-4" />
               {loading ? 'Creating…' : 'Create Connection'}
             </button>
           </div>

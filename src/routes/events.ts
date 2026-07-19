@@ -6,23 +6,26 @@ const router = Router();
 
 // GET /api/events?status=failed
 router.get('/', async (req: Request, res: Response): Promise<void> => {
+    const userId = req.auth.userId;
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
     const { status } = req.query as { status?: string };
 
-    // "retrying" is derived (pending + has delivery attempts), not stored.
-    // "pending" in the filter means pure pending — no attempts yet.
-    let whereClause = '';
-    const params: (string | number)[] = [];
+    let whereClause = 'WHERE ep.user_id = $1';
+    const params: (string | number)[] = [userId];
 
     if (status === 'retrying') {
-        whereClause = `WHERE e.status = 'pending' AND EXISTS (
+        whereClause += ` AND e.status = 'pending' AND EXISTS (
       SELECT 1 FROM deliveries d WHERE d.event_id = e.id
     )`;
     } else if (status === 'pending') {
-        whereClause = `WHERE e.status = 'pending' AND NOT EXISTS (
+        whereClause += ` AND e.status = 'pending' AND NOT EXISTS (
       SELECT 1 FROM deliveries d WHERE d.event_id = e.id
     )`;
     } else if (status && status !== 'all') {
-        whereClause = 'WHERE e.status = $1';
+        whereClause += ` AND e.status = $${params.length + 1}`;
         params.push(status);
     }
 
@@ -67,6 +70,11 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 
 // GET /api/events/:id
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+    const userId = req.auth.userId;
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
     const { id } = req.params;
 
     try {
@@ -83,8 +91,8 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
          END              AS display_status
        FROM events e
        JOIN endpoints ep ON ep.id = e.endpoint_id
-       WHERE e.id = $1`,
-            [id]
+       WHERE e.id = $1 AND ep.user_id = $2`,
+            [id, userId]
         );
 
         if (eventResult.rows.length === 0) {
@@ -116,12 +124,20 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 
 // POST /api/events/:id/replay
 router.post('/:id/replay', async (req: Request, res: Response): Promise<void> => {
+    const userId = req.auth.userId;
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
     const { id } = req.params;
 
     try {
         const eventResult = await pool.query(
-            'SELECT id, status FROM events WHERE id = $1',
-            [id]
+            `SELECT e.id, e.status 
+             FROM events e
+             JOIN endpoints ep ON ep.id = e.endpoint_id
+             WHERE e.id = $1 AND ep.user_id = $2`,
+            [id, userId]
         );
 
         if (eventResult.rows.length === 0) {

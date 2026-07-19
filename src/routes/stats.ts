@@ -3,7 +3,13 @@ import { pool } from '../db';
 
 const router = Router();
 
-router.get('/', async (_req: Request, res: Response): Promise<void> => {
+router.get('/', async (req: Request, res: Response): Promise<void> => {
+    const userId = req.auth.userId;
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+
     try {
         const [eventStats, latencyStats] = await Promise.all([
             pool.query<{
@@ -12,19 +18,23 @@ router.get('/', async (_req: Request, res: Response): Promise<void> => {
                 success_rate: string | null;
             }>(`
         SELECT
-          COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '24 hours')                       AS events_today,
-          COUNT(*) FILTER (WHERE status = 'failed' AND created_at > NOW() - INTERVAL '24 hours') AS failed_today,
+          COUNT(e.id) FILTER (WHERE e.created_at > NOW() - INTERVAL '24 hours')                       AS events_today,
+          COUNT(e.id) FILTER (WHERE e.status = 'failed' AND e.created_at > NOW() - INTERVAL '24 hours') AS failed_today,
           ROUND(
-            COUNT(*) FILTER (WHERE status = 'success' AND created_at > NOW() - INTERVAL '24 hours')::numeric /
-            NULLIF(COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '24 hours'), 0) * 100, 1
+            COUNT(e.id) FILTER (WHERE e.status = 'success' AND e.created_at > NOW() - INTERVAL '24 hours')::numeric /
+            NULLIF(COUNT(e.id) FILTER (WHERE e.created_at > NOW() - INTERVAL '24 hours'), 0) * 100, 1
           ) AS success_rate
-        FROM events
-      `),
+        FROM events e
+        JOIN endpoints ep ON ep.id = e.endpoint_id
+        WHERE ep.user_id = $1
+      `, [userId]),
             pool.query<{ avg_latency_ms: string | null }>(`
-        SELECT ROUND(AVG(duration_ms)) AS avg_latency_ms
-        FROM deliveries
-        WHERE created_at > NOW() - INTERVAL '24 hours'
-      `),
+        SELECT ROUND(AVG(d.duration_ms)) AS avg_latency_ms
+        FROM deliveries d
+        JOIN events e ON e.id = d.event_id
+        JOIN endpoints ep ON ep.id = e.endpoint_id
+        WHERE d.created_at > NOW() - INTERVAL '24 hours' AND ep.user_id = $1
+      `, [userId]),
         ]);
 
         res.json({

@@ -2,83 +2,179 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Radio, Network, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useEffect } from 'react';
+
+// Minimal Inline SVG Icons mimicking Linear's fine-line aesthetic
+function IconOverview({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <rect x="2.5" y="2.5" width="11" height="11" rx="2" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M2.5 7.5H13.5" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function IconEvents({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.2" strokeDasharray="2 2" />
+      <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+function IconConnections({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M5 8H11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <circle cx="3" cy="8" r="1.5" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="13" cy="8" r="1.5" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function IconSettings({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M3.5 8H12.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <circle cx="5" cy="8" r="1.5" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M3.5 12H12.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <circle cx="11" cy="12" r="1.5" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M3.5 4H12.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <circle cx="8" cy="4" r="1.5" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function IconX({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M4.5 4.5L11.5 11.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4.5 11.5L11.5 4.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function IconPanelLeft({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M6 2.5V13.5" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  );
+}
 
 const SECTIONS = [
   {
     title: 'Monitor',
     items: [
-      { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
-      { href: '/events', label: 'Events', icon: Radio },
+      { href: '/dashboard', label: 'Overview', icon: IconOverview },
+      { href: '/events', label: 'Events', icon: IconEvents },
     ],
   },
   {
     title: 'Manage',
     items: [
-      { href: '/connections', label: 'Connections', icon: Network },
+      { href: '/connections', label: 'Connections', icon: IconConnections },
     ],
   },
 ];
 
 function HookLensLogo() {
   return (
-    <svg viewBox="0 0 20 20" className="w-4 h-4 fill-white" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 3a1 1 0 011 1v2.586l1.707 1.707a1 1 0 01-1.414 1.414L9.586 9.999a1 1 0 01-.293-.707V6a1 1 0 011-1z"
-      />
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+      <circle cx="10" cy="10" r="8" stroke="var(--primary)" strokeWidth="1.5" />
+      <circle cx="10" cy="10" r="3.5" fill="var(--primary)" />
+      <path d="M10 3 L10 6.5 M10 13.5 L10 17 M3 10 L6.5 10 M13.5 10 L17 10" stroke="var(--primary)" strokeWidth="1.2" strokeLinecap="round" />
     </svg>
   );
 }
 
-export function Sidebar() {
-  const pathname = usePathname();
+interface SidebarProps {
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
+  isMobileOpen: boolean;
+  onCloseMobile: () => void;
+}
 
+export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMobile }: SidebarProps) {
+  const pathname = usePathname();
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
-  return (
-    <aside className="w-[220px] flex-shrink-0 flex flex-col border-r border-[#181818] bg-[#0d0d0d]">
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    onCloseMobile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 h-[56px] border-b border-[#181818] flex-shrink-0">
-        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center flex-shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.3)]">
+  const content = (
+    <aside className={cn(
+      "flex flex-col border-r bg-surface-1 border-hairline font-sans h-full transition-all duration-300 overflow-hidden",
+      isCollapsed ? "w-[68px]" : "w-[240px]"
+    )}>
+      
+      {/* Workspace Switcher / Logo & Controls */}
+      <div className={cn(
+        "flex items-center h-[56px] flex-shrink-0 border-b border-transparent transition-colors",
+        isCollapsed ? "flex-col justify-center gap-4 py-4 h-auto" : "px-5 justify-between"
+      )}>
+        <Link href="/dashboard" className={cn("flex items-center gap-3 cursor-pointer", isCollapsed && "justify-center")}>
           <HookLensLogo />
-        </div>
-        <div>
-          <span className="text-white font-semibold text-[13px] tracking-tight">HookLens</span>
-          <div className="flex items-center gap-1 mt-0.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span className="text-[10px] text-[#444444]">self-hosted</span>
-          </div>
+          {!isCollapsed && (
+            <div className="flex flex-col">
+              <span className="text-ink font-semibold text-[14px] tracking-tight leading-tight hover:text-white transition-colors">HookLens</span>
+            </div>
+          )}
+        </Link>
+        
+        {/* Toggle / Close Buttons */}
+        <div className="flex items-center">
+          {/* Mobile close button inside sidebar header */}
+          {!isCollapsed && (
+            <button onClick={onCloseMobile} className="md:hidden p-1.5 rounded-md text-ink-subtle hover:text-ink hover:bg-surface-2 transition-colors">
+              <IconX className="w-4 h-4" />
+            </button>
+          )}
+          {/* Desktop collapse toggle */}
+          <button 
+            onClick={onToggleCollapse} 
+            className="hidden md:flex p-1.5 rounded-md text-ink-subtle hover:text-ink hover:bg-surface-2 transition-colors"
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <IconPanelLeft className={cn("w-4 h-4 transition-transform", isCollapsed && "rotate-180")} />
+          </button>
         </div>
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 px-2 py-3 overflow-y-auto">
+      <div className={cn("flex-1 py-4 overflow-y-auto", isCollapsed ? "px-2" : "px-3")}>
         {SECTIONS.map((section) => (
-          <div key={section.title} className="mb-4">
-            <p className="text-[#333333] text-[10px] font-semibold uppercase tracking-[0.1em] px-2 mb-1.5">
-              {section.title}
-            </p>
+          <div key={section.title} className="mb-6">
+            {!isCollapsed && (
+              <p className="text-ink-subtle text-[11px] font-semibold uppercase tracking-[0.05em] px-3 mb-2">
+                {section.title}
+              </p>
+            )}
             <nav className="space-y-0.5">
               {section.items.map(({ href, label, icon: Icon }) => (
                 <Link
                   key={href}
                   href={href}
+                  title={isCollapsed ? label : undefined}
                   className={cn(
-                    'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-all duration-150',
+                    'flex items-center rounded-md text-[13px] transition-all duration-100',
+                    isCollapsed ? 'justify-center p-2.5 mx-auto w-10' : 'gap-2.5 px-3 py-1.5',
                     isActive(href)
-                      ? 'bg-[#1a1a1a] text-white border border-[#252525]'
-                      : 'text-[#555555] hover:bg-[#141414] hover:text-[#aaaaaa]'
+                      ? 'bg-surface-2 text-ink font-medium'
+                      : 'text-ink-subtle hover:bg-surface-2 hover:text-ink'
                   )}
                 >
                   <Icon className={cn(
-                    'h-3.5 w-3.5 flex-shrink-0',
-                    isActive(href) ? 'text-blue-400' : ''
+                    'h-4 w-4 flex-shrink-0',
+                    isActive(href) ? 'text-ink' : 'text-ink-subtle'
                   )} />
-                  {label}
+                  {!isCollapsed && label}
                 </Link>
               ))}
             </nav>
@@ -86,32 +182,66 @@ export function Sidebar() {
         ))}
       </div>
 
-      {/* Bottom */}
-      <div className="px-2 pb-3 border-t border-[#181818] pt-2 space-y-0.5">
+      {/* Bottom section */}
+      <div className={cn("pb-4", isCollapsed ? "px-2" : "px-3")}>
         <Link
           href="/settings"
+          title={isCollapsed ? "Settings" : undefined}
           className={cn(
-            'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-all',
+            'flex items-center rounded-md text-[13px] transition-all duration-100',
+            isCollapsed ? 'justify-center p-2.5 mx-auto w-10' : 'gap-2.5 px-3 py-1.5',
             isActive('/settings')
-              ? 'bg-[#1a1a1a] text-white border border-[#252525]'
-              : 'text-[#444444] hover:bg-[#141414] hover:text-white'
+              ? 'bg-surface-2 text-ink font-medium'
+              : 'text-ink-subtle hover:bg-surface-2 hover:text-ink'
           )}
         >
-          <Settings className={cn('h-3.5 w-3.5 flex-shrink-0', isActive('/settings') ? 'text-blue-400' : '')} />
-          Settings
+          <IconSettings className={cn('h-4 w-4 flex-shrink-0', isActive('/settings') ? 'text-ink' : 'text-ink-subtle')} />
+          {!isCollapsed && "Settings"}
         </Link>
-
-        {/* User */}
-        <div className="flex items-center gap-2.5 px-2.5 py-2 mt-1">
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-[10px] font-bold">HL</span>
+        
+        {/* User Profile Footer */}
+        <div className={cn(
+          "mt-4 flex items-center cursor-pointer hover:bg-surface-2 rounded-md transition-colors",
+          isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-2"
+        )}>
+          <div className="w-6 h-6 rounded-full bg-[#1e2025] border border-hairline flex items-center justify-center flex-shrink-0">
+            <span className="text-ink-muted text-[10px] font-medium">HL</span>
           </div>
-          <div className="min-w-0">
-            <p className="text-[#888888] text-xs font-medium truncate">HookLens</p>
-            <p className="text-[#444444] text-[10px] truncate">Open Source</p>
-          </div>
+          {!isCollapsed && (
+            <div className="min-w-0">
+              <p className="text-ink text-[13px] font-medium truncate leading-tight">Admin</p>
+            </div>
+          )}
         </div>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar (static) */}
+      <div className="hidden md:block h-full">
+        {content}
+      </div>
+
+      {/* Mobile Sidebar (overlay) */}
+      <div className={cn(
+        "fixed inset-0 z-50 md:hidden transition-all duration-300",
+        isMobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      )}>
+        {/* Backdrop */}
+        <div 
+          className="absolute inset-0 bg-[#010102]/80 backdrop-blur-sm"
+          onClick={onCloseMobile}
+        />
+        {/* Drawer */}
+        <div className={cn(
+          "absolute inset-y-0 left-0 w-[240px] transform transition-transform duration-300",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+        )}>
+          {content}
+        </div>
+      </div>
+    </>
   );
 }
