@@ -83,10 +83,11 @@ function Hero() {
         Webhook infrastructure <span style={{ color: '#333' }}>for fintech developers.</span>
       </h1>
       <p style={{ fontSize: '18px', color: '#555', lineHeight: 1.55, maxWidth: '540px', marginTop: '24px', animation: 'heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both', animationDelay: '120ms' }}>
-        A self-hosted gateway for Paystack, Flutterwave, and Monnify webhooks. Normalised ingestion, guaranteed delivery, automatic retries, and AI-powered failure diagnostics.
+        A self-hosted gateway for <strong style={{ color: '#27a644', fontWeight: 600 }}>Paystack</strong> webhooks &mdash; with Flutterwave and Monnify coming soon. Normalised ingestion, guaranteed delivery, automatic retries, and AI-powered failure diagnostics.
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '32px', flexWrap: 'wrap', animation: 'heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both', animationDelay: '160ms' }}>
-        <a href="/waitlist" style={{ fontSize: '14px', fontWeight: 500, color: '#000', backgroundColor: '#fff', borderRadius: '8px', padding: '10px 20px', display: 'inline-flex', alignItems: 'center' }}>Join waitlist</a>
+        <a href="/sign-up" style={{ fontSize: '14px', fontWeight: 500, color: '#000', backgroundColor: '#fff', borderRadius: '8px', padding: '10px 20px', display: 'inline-flex', alignItems: 'center' }}>Get started free</a>
+        <a href="/sign-in" className="nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '14px' }}>Sign in</a>
         <a href="https://github.com/abubakar2906/hooklens" target="_blank" rel="noopener noreferrer" className="nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
           View on GitHub
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10 L10 2 M4 2 L10 2 L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -156,7 +157,7 @@ function Hero() {
 
 // Features
 const FEATURES = [
-  { id: 'sig', fig: 'FIG 0.1', eyebrow: 'Authentication', title: 'Signatures verified automatically', body: 'Paystack, Flutterwave, and Monnify HMAC signatures are verified per-endpoint before entering your queue.' },
+  { id: 'sig', fig: 'FIG 0.1', eyebrow: 'Authentication', title: 'Signatures verified automatically', body: 'Paystack HMAC-SHA512 signatures are verified per-endpoint before events enter your queue. More providers arriving soon.' },
   { id: 'ai', fig: 'FIG 0.2', eyebrow: 'Observability', title: 'AI-assisted failure diagnostics', body: 'Instant insights into why a delivery failed &mdash; analyzing headers, payloads, and downstream server responses.' },
   { id: 'replay', fig: 'FIG 0.3', eyebrow: 'Resilience', title: 'Zero-downtime event replays', body: 'Replay failed events individually or in bulk. Original timestamps and payload integrity preserved.' },
   { id: 'retry', fig: 'FIG 0.4', eyebrow: 'Reliability', title: 'Automatic exponential backoff', body: 'Configurable retry policies handle transient network errors and downstream server restarts gracefully.' },
@@ -281,9 +282,9 @@ function ProductPreviewSection() {
 
 // Integrations
 const PROVIDERS = [
-  { id: 'paystack', name: 'Paystack', region: 'Nigeria &middot; Africa' },
-  { id: 'flutterwave', name: 'Flutterwave', region: 'Africa' },
-  { id: 'monnify', name: 'Monnify', region: 'Nigeria' },
+  { id: 'paystack', name: 'Paystack', region: 'Nigeria &middot; Africa', live: true },
+  { id: 'flutterwave', name: 'Flutterwave', region: 'Coming soon', live: false },
+  { id: 'monnify', name: 'Monnify', region: 'Coming soon', live: false },
 ];
 const DESTINATIONS = [
   { id: 'express', name: 'Express', lang: 'Node.js' },
@@ -308,12 +309,15 @@ function IntegrationsSection() {
           <div className="flex flex-col gap-3 w-full lg:flex-1 lg:max-w-[280px]">
             <p style={{ fontSize: '11px', fontWeight: 600, color: '#333', letterSpacing: '0.4px', textTransform: 'uppercase', marginBottom: '4px' }}>Sources</p>
             {PROVIDERS.map(p => (
-              <div key={p.id} style={{ position: 'relative', backgroundColor: '#060606', padding: '14px 16px', borderRadius: '2px' }}>
+              <div key={p.id} style={{ position: 'relative', backgroundColor: '#060606', padding: '14px 16px', borderRadius: '2px', opacity: p.live ? 1 : 0.45 }}>
                 <span aria-hidden="true" style={{ position: 'absolute', top: 0, left: 0, width: C, height: C, borderTop: '1px solid ' + col, borderLeft: '1px solid ' + col, pointerEvents: 'none' }} />
                 <span aria-hidden="true" style={{ position: 'absolute', top: 0, right: 0, width: C, height: C, borderTop: '1px solid ' + col, borderRight: '1px solid ' + col, pointerEvents: 'none' }} />
                 <span aria-hidden="true" style={{ position: 'absolute', bottom: 0, left: 0, width: C, height: C, borderBottom: '1px solid ' + col, borderLeft: '1px solid ' + col, pointerEvents: 'none' }} />
                 <span aria-hidden="true" style={{ position: 'absolute', bottom: 0, right: 0, width: C, height: C, borderBottom: '1px solid ' + col, borderRight: '1px solid ' + col, pointerEvents: 'none' }} />
-                <p style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{p.name}</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                  <p style={{ fontSize: '14px', fontWeight: 500, color: p.live ? '#fff' : '#555' }}>{p.name}</p>
+                  {p.live && <span style={{ fontSize: '10px', fontWeight: 600, color: '#27a644', backgroundColor: 'rgba(39,166,68,0.1)', border: '1px solid rgba(39,166,68,0.2)', padding: '1px 7px', borderRadius: '99px' }}>Live</span>}
+                </div>
                 <p style={{ fontSize: '12px', color: '#444' }} dangerouslySetInnerHTML={{ __html: p.region }}></p>
               </div>
             ))}
@@ -357,7 +361,7 @@ function IntegrationsSection() {
 // Pricing
 function PricingSection() {
   const plans = [
-    { name: 'Open Source', price: '$0', period: 'forever', features: ['Self-host anywhere', 'Unlimited events', 'Paystack, Flutterwave, Monnify', 'BullMQ async delivery', 'AI diagnostics (BYOK)'], featured: false },
+    { name: 'Open Source', price: '$0', period: 'forever', features: ['Self-host anywhere', 'Unlimited events', 'Paystack (live)', 'Flutterwave & Monnify (coming soon)', 'BullMQ async delivery', 'AI diagnostics (BYOK)'], featured: false },
     { name: 'Cloud', price: 'Soon', period: 'managed', features: ['Fully managed', '90-day retention', 'Email support', 'Usage analytics', 'Priority queues'], featured: true },
     { name: 'Enterprise', price: 'Custom', period: 'annually', features: ['Custom retention', 'SLA guarantees', 'Dedicated support', 'Custom integrations', 'Audit logs'], featured: false },
   ];
@@ -398,7 +402,7 @@ function PricingSection() {
 function FAQSection() {
   const faqs = [
     { q: 'Is HookLens really free?', a: 'Yes. The core gateway is open-source under the MIT license, free to self-host forever. You bring your own infrastructure.' },
-    { q: 'Which payment providers are supported?', a: 'Currently Paystack, Flutterwave, and Monnify &mdash; the three largest in Nigeria and West Africa. More on the roadmap.' },
+    { q: 'Which payment providers are supported right now?', a: '<strong style="color:#fff">Paystack</strong> is fully supported today with HMAC-SHA512 signature verification. Flutterwave and Monnify are on the roadmap and will be released soon.' },
     { q: 'What does self-hosted mean exactly?', a: 'You run HookLens on your own servers or any cloud VM. You control the data, the code, and the infrastructure.' },
     { q: 'Do I need Redis and Postgres?', a: 'Yes. HookLens uses BullMQ for the delivery queue (Redis) and Postgres for event storage. Both are supported everywhere.' },
     { q: 'What is AI failure diagnostics?', a: 'When a delivery fails, HookLens sends error context to an LLM to generate a plain-English explanation. You provide your own API key.' },
@@ -435,7 +439,7 @@ function Footer() {
         </div>
         <p className="text-center md:text-left" style={{ fontSize: '12px', color: '#2a2a2a' }} dangerouslySetInnerHTML={{ __html: '&copy; ' + new Date().getFullYear() + ' HookLens &middot; MIT License &middot; Built for African fintech' }}></p>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          {[{ label: 'GitHub', href: 'https://github.com/abubakar2906/hooklens' }, { label: 'Docs', href: '/docs' }, { label: 'Waitlist', href: '/waitlist' }].map(({ label, href }) => (
+          {[{ label: 'GitHub', href: 'https://github.com/abubakar2906/hooklens' }, { label: 'Docs', href: '/docs' }, { label: 'Sign in', href: '/sign-in' }, { label: 'Get started', href: '/sign-up' }].map(({ label, href }) => (
             <a key={label} href={href} className="footer-link">{label}</a>
           ))}
         </div>

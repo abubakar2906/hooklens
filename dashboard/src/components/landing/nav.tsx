@@ -42,21 +42,26 @@ export default function Nav() {
         </div>
         
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary navigation">
-          {[{ label: 'Product', href: '#features' }, { label: 'Docs', href: '/docs' }, { label: 'GitHub', href: 'https://github.com' }].map(({ label, href }) => (
+          {[{ label: 'Product', href: '#features' }, { label: 'Docs', href: '/docs' }, { label: 'GitHub', href: 'https://github.com/abubakar2906/hooklens' }].map(({ label, href }) => (
             <a key={label} href={href} className="nav-link">{label}</a>
           ))}
         </nav>
         
-        <a href="/waitlist" className="hidden sm:flex" style={{ fontSize: '14px', fontWeight: 500, color: '#000', backgroundColor: '#fff', borderRadius: '8px', padding: '8px 16px' }}>
-          Join waitlist
-        </a>
+        <div className="hidden sm:flex items-center gap-3">
+          <a href="/sign-in" style={{ fontSize: '14px', fontWeight: 500, color: '#888', transition: 'color 0.2s' }} className="nav-link">
+            Sign in
+          </a>
+          <a href="/sign-up" style={{ fontSize: '14px', fontWeight: 500, color: '#000', backgroundColor: '#fff', borderRadius: '8px', padding: '8px 16px' }}>
+            Get started
+          </a>
+        </div>
       </div>
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden absolute w-full border-b" style={{ backgroundColor: '#000', borderColor: '#1a1a1a', top: '56px' }}>
           <nav className="flex flex-col px-6 py-4 gap-4">
-            {[{ label: 'Product', href: '#features' }, { label: 'Docs', href: '/docs' }, { label: 'GitHub', href: 'https://github.com' }].map(({ label, href }) => (
+            {[{ label: 'Product', href: '#features' }, { label: 'Docs', href: '/docs' }, { label: 'GitHub', href: 'https://github.com/abubakar2906/hooklens' }].map(({ label, href }) => (
               <a 
                 key={label} 
                 href={href} 
@@ -69,10 +74,16 @@ export default function Nav() {
             ))}
             <div style={{ height: '1px', backgroundColor: '#1a1a1a', margin: '4px 0' }} />
             <a 
-              href="/waitlist" 
+              href="/sign-in"
+              style={{ fontSize: '15px', fontWeight: 500, color: '#888', padding: '10px 0', textAlign: 'center' }}
+            >
+              Sign in
+            </a>
+            <a 
+              href="/sign-up" 
               style={{ fontSize: '15px', fontWeight: 500, color: '#000', backgroundColor: '#fff', borderRadius: '8px', padding: '10px 16px', textAlign: 'center' }}
             >
-              Join waitlist
+              Get started
             </a>
           </nav>
         </div>

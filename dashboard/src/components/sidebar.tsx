@@ -57,6 +57,16 @@ function IconX({ className }: { className?: string }) {
   );
 }
 
+function IconLogout({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M6 13.5H3.5C2.94772 13.5 2.5 13.0523 2.5 12.5V3.5C2.5 2.94772 2.94772 2.5 3.5 2.5H6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <path d="M10.5 11L13.5 8L10.5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5.5 8H13.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function IconPanelLeft({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -185,7 +195,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
       </div>
 
       {/* Bottom section */}
-      <div className={cn("pb-4", isCollapsed ? "px-2" : "px-3")}>
+      <div className={cn("pb-4 flex flex-col gap-2", isCollapsed ? "px-2" : "px-3")}>
         <Link
           href="/settings"
           title={isCollapsed ? "Settings" : undefined}
@@ -200,22 +210,31 @@ export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
           <IconSettings className={cn('h-4 w-4 flex-shrink-0', isActive('/settings') ? 'text-ink' : 'text-ink-subtle')} />
           {!isCollapsed && "Settings"}
         </Link>
+        
+        {/* Log Out Button */}
+        <button
+          type="button"
+          onClick={() => signOut({ redirectUrl: '/sign-in' })}
+          title={isCollapsed ? 'Log out' : undefined}
+          className={cn(
+            'flex items-center rounded-md text-[13px] text-red-500/80 hover:text-red-500 hover:bg-red-500/10 transition-all duration-100',
+            isCollapsed ? 'justify-center p-2.5 mx-auto w-10' : 'gap-2.5 px-3 py-1.5'
+          )}
+        >
+          <IconLogout className={cn('h-4 w-4 flex-shrink-0')} />
+          {!isCollapsed && "Log out"}
+        </button>
 
         {/* User Profile Footer */}
-        <div className={cn(
-          "mt-4 flex items-center cursor-pointer hover:bg-surface-2 rounded-md transition-colors",
-          isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-2"
-        )}>
-          <button
-            type="button"
-            onClick={() => signOut({ redirectUrl: '/sign-in' })}
-            title={isCollapsed ? 'Log out' : undefined}
-            className={cn(
-              'mt-4 w-full flex items-center cursor-pointer hover:bg-surface-2 rounded-md transition-colors text-left',
-              isCollapsed ? 'justify-center p-2' : 'gap-3 px-3 py-2'
-            )}
-          ></button>
-
+        <Link
+          href="/profile"
+          title={isCollapsed ? 'Profile' : undefined}
+          className={cn(
+            "mt-2 flex items-center cursor-pointer hover:bg-surface-2 rounded-md transition-colors",
+            isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-2",
+            isActive('/profile') && "bg-surface-2"
+          )}
+        >
           <div className="w-6 h-6 rounded-full bg-[#1e2025] border border-hairline flex items-center justify-center flex-shrink-0">
             <span className="text-ink-muted text-[10px] font-medium">HL</span>
           </div>
@@ -224,7 +243,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
               <p className="text-ink text-[13px] font-medium truncate leading-tight">Admin</p>
             </div>
           )}
-        </div>
+        </Link>
       </div>
     </aside>
   );
