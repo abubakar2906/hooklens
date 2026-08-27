@@ -6,7 +6,8 @@
     "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/server.js",
-    "migrate": "tsx src/db/migrate.ts"
+    "migrate": "tsx src/db/migrate.ts",
+    "test": "tsx --test src/**/*.test.ts"
   },
   "keywords": [],
   "author": "",
