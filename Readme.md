@@ -89,7 +89,7 @@ Processing webhooks involves sensitive financial data. HookLens is built with se
 - **Language:** TypeScript
 - **Backend:** Node.js, Express
 - **Frontend / Dashboard:** Next.js (App Router), React 19, Tailwind CSS
-- **Testing:** Jest
+- **Testing:** Node.js built-in test runner (`node:test`)
 - **Security:** Node Native Crypto (HMAC Signature Verification)
 
 ---
