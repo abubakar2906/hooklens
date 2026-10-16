@@ -2,14 +2,18 @@ export default function ObservabilityDocs() {
   return (
     <div className="flex flex-col gap-6" style={{ animation: 'heroFadeUp 0.5s ease both' }}>
       <p style={{ fontSize: '13px', fontWeight: 600, color: '#5e6ad2', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-        Feature
+        Planned feature
       </p>
       <h1 style={{ fontSize: '32px', fontWeight: 700, letterSpacing: '-1px', color: '#fff', lineHeight: 1.2 }}>
         AI-assisted Failure Diagnostics
       </h1>
+
+      <p style={{ fontSize: '14px', color: '#e0e0e0', lineHeight: 1.6, padding: '12px 16px', border: '1px solid #5e6ad2', borderRadius: '8px' }}>
+        Coming soon. Delivery, retries and failure tracking work today. The diagnostic worker described here is the next thing being built.
+      </p>
       
       <p style={{ fontSize: '16px', color: '#888', lineHeight: 1.6 }}>
-        Silent failures are the biggest pain point of webhook integrations. When an event fails to deliver after multiple retries, HookLens does not just log a status code. It provides actionable intelligence.
+        Silent failures are the biggest pain point of webhook integrations. When an event fails to deliver after multiple retries, HookLens does not just log a status code. It will provide actionable intelligence.
       </p>
 
       <div style={{ marginTop: '16px', padding: '24px', backgroundColor: '#060606', border: '1px solid #1a1a1a', borderRadius: '8px' }}>
@@ -17,10 +21,10 @@ export default function ObservabilityDocs() {
           How the Diagnostic Worker Operates
         </h2>
         <p style={{ fontSize: '15px', color: '#666', lineHeight: 1.6, marginBottom: '16px' }}>
-          When a webhook hits its terminal failure limit, the HookLens Diagnostic Worker triggers asynchronously. It packages the raw payload, the response headers, and the downstream error body.
+          When a webhook hits its terminal failure limit, the HookLens Diagnostic Worker will trigger asynchronously. It will package the raw payload, the response headers, and the downstream error body.
         </p>
         <p style={{ fontSize: '15px', color: '#666', lineHeight: 1.6 }}>
-          This data is sent securely to the Anthropic API to generate a plain language summary of why the delivery failed, offering direct insight into whether the issue is a 502 Bad Gateway, a validation error from your backend, or a malformed payload.
+          This data will be sent securely to the Anthropic API to generate a plain language summary of why the delivery failed, giving direct insight into whether the issue is a 502 Bad Gateway, a validation error from your backend, or a malformed payload.
         </p>
       </div>
 

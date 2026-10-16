@@ -71,7 +71,7 @@ export default function LandingPage() {
           <span className="text-emerald-400">Paystack</span>,{' '}
           <span className="text-orange-400">Flutterwave</span>, and{' '}
           <span className="text-violet-400">Monnify</span> — with guaranteed delivery,
-          exponential retries, and AI-assisted failure diagnostics.
+          exponential retries, with AI-assisted failure diagnostics on the way.
         </p>
 
         <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -223,8 +223,8 @@ export default function LandingPage() {
             {
               icon: Cpu,
               color: 'text-violet-400 bg-violet-500/10 border-violet-500/20',
-              title: 'AI-Assisted Diagnostics',
-              desc: 'When an event permanently fails, the platform automatically runs AI analysis to explain the root cause and suggest fixes.',
+              title: 'AI-Assisted Diagnostics (coming soon)',
+              desc: 'Planned: when an event permanently fails, HookLens will run AI analysis to explain the root cause and suggest fixes.',
               tag: 'Intelligence',
             },
             {
@@ -285,7 +285,7 @@ export default function LandingPage() {
                 'No per-event billing or vendor lock-in',
                 'Decoupled queue survives destination downtime',
                 'Per-provider HMAC verification built in',
-                'AI diagnosis on every permanent failure',
+                'AI diagnosis on every permanent failure (coming soon)',
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3 text-sm text-[#888888]">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />

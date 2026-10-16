@@ -83,7 +83,7 @@ function Hero() {
         Webhook infrastructure <span style={{ color: '#333' }}>for fintech developers.</span>
       </h1>
       <p style={{ fontSize: '18px', color: '#555', lineHeight: 1.55, maxWidth: '540px', marginTop: '24px', animation: 'heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both', animationDelay: '120ms' }}>
-        A self-hosted gateway for <strong style={{ color: '#27a644', fontWeight: 600 }}>Paystack </strong> webhooks &mdash; with Flutterwave and Monnify coming soon. Normalised ingestion, guaranteed delivery, automatic retries, and AI-powered failure diagnostics.
+        A self-hosted gateway for <strong style={{ color: '#27a644', fontWeight: 600 }}>Paystack </strong> webhooks &mdash; with Flutterwave and Monnify coming soon. Normalised ingestion, guaranteed delivery and automatic retries, with AI-powered failure diagnostics coming soon.
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '32px', flexWrap: 'wrap', animation: 'heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both', animationDelay: '160ms' }}>
         <a href="/sign-up" style={{ fontSize: '14px', fontWeight: 500, color: '#000', backgroundColor: '#fff', borderRadius: '8px', padding: '10px 20px', display: 'inline-flex', alignItems: 'center' }}>Get started free</a>
@@ -158,7 +158,7 @@ function Hero() {
 // Features
 const FEATURES = [
   { id: 'sig', fig: 'FIG 0.1', eyebrow: 'Authentication', title: 'Signatures verified automatically', body: 'Paystack HMAC-SHA512 signatures are verified per-endpoint before events enter your queue. More providers arriving soon.' },
-  { id: 'ai', fig: 'FIG 0.2', eyebrow: 'Observability', title: 'AI-assisted failure diagnostics', body: 'Instant insights into why a delivery failed &mdash; analyzing headers, payloads, and downstream server responses.' },
+  { id: 'ai', fig: 'FIG 0.2', eyebrow: 'Observability', title: 'AI-assisted failure diagnostics (coming soon)', body: 'Planned: instant insights into why a delivery failed &mdash; analyzing headers, payloads, and downstream server responses.' },
   { id: 'replay', fig: 'FIG 0.3', eyebrow: 'Resilience', title: 'Zero-downtime event replays', body: 'Replay failed events individually or in bulk. Original timestamps and payload integrity preserved.' },
   { id: 'retry', fig: 'FIG 0.4', eyebrow: 'Reliability', title: 'Automatic exponential backoff', body: 'Configurable retry policies handle transient network errors and downstream server restarts gracefully.' },
   { id: 'logs', fig: 'FIG 0.5', eyebrow: 'Visibility', title: 'Real-time delivery logs', body: 'Filter events by provider, status, or date range. Search payloads and headers with zero indexing delay.' },
@@ -361,7 +361,7 @@ function IntegrationsSection() {
 // Pricing
 function PricingSection() {
   const plans = [
-    { name: 'Open Source', price: '$0', period: 'forever', features: ['Self-host anywhere', 'Unlimited events', 'Paystack (live)', 'Flutterwave & Monnify (coming soon)', 'BullMQ async delivery', 'AI diagnostics (BYOK)'], featured: false },
+    { name: 'Open Source', price: '$0', period: 'forever', features: ['Self-host anywhere', 'Unlimited events', 'Paystack (live)', 'Flutterwave & Monnify (coming soon)', 'BullMQ async delivery', 'AI diagnostics (BYOK, coming soon)'], featured: false },
     { name: 'Cloud', price: 'Soon', period: 'managed', features: ['Fully managed', '90-day retention', 'Email support', 'Usage analytics', 'Priority queues'], featured: true },
     { name: 'Enterprise', price: 'Custom', period: 'annually', features: ['Custom retention', 'SLA guarantees', 'Dedicated support', 'Custom integrations', 'Audit logs'], featured: false },
   ];
@@ -405,7 +405,7 @@ function FAQSection() {
     { q: 'Which payment providers are supported right now?', a: '<strong style="color:#fff">Paystack</strong> is fully supported today with HMAC-SHA512 signature verification. Flutterwave and Monnify are on the roadmap and will be released soon.' },
     { q: 'What does self-hosted mean exactly?', a: 'You run HookLens on your own servers or any cloud VM. You control the data, the code, and the infrastructure.' },
     { q: 'Do I need Redis and Postgres?', a: 'Yes. HookLens uses BullMQ for the delivery queue (Redis) and Postgres for event storage. Both are supported everywhere.' },
-    { q: 'What is AI failure diagnostics?', a: 'When a delivery fails, HookLens sends error context to an LLM to generate a plain-English explanation. You provide your own API key.' },
+    { q: 'What is AI failure diagnostics?', a: 'It is planned but not built yet. When a delivery fails, HookLens will send the error context to an LLM to write a plain-English explanation, using your own API key.' },
   ];
   return (
     <section className="mx-auto max-w-[800px] px-6" style={{ paddingBottom: '120px' }}>

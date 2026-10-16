@@ -46,14 +46,14 @@ The goal of this project is to provide a unified, consistent interface for handl
 - [x] Shared verification interface
 - [x] Extensible verifier architecture
 - [x] Constant-time signature comparison to mitigate timing attacks
-- [x] Unit tests for verification logic
+- [ ] Unit tests for verification logic
 
 ### 🚧 Phase 4: Delivery & Retry System *(In Progress)*
-- [ ] Webhook delivery management (BullMQ)
-- [ ] Automatic exponential backoff retry mechanism
+- [x] Webhook delivery management (BullMQ)
+- [x] Automatic exponential backoff retry mechanism (5 attempts)
 - [ ] Configurable retry policies
 - [ ] Failed event handling & dead-letter queues
-- [ ] Delivery status tracking
+- [x] Delivery status tracking
 
 ### 🚧 Phase 5: Dashboard & UI *(In Progress)*
 - [x] Beautiful dark-mode Landing page
@@ -89,7 +89,6 @@ Processing webhooks involves sensitive financial data. HookLens is built with se
 - **Language:** TypeScript
 - **Backend:** Node.js, Express
 - **Frontend / Dashboard:** Next.js (App Router), React 19, Tailwind CSS
-- **Testing:** Jest
 - **Security:** Node Native Crypto (HMAC Signature Verification)
 
 ---
