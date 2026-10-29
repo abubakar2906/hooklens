@@ -22,6 +22,8 @@ function GlobalStyles() {
       .ticker-track:hover { animation-play-state:paused; }
       .ticker-item { color:#252525; font-size:18px; font-weight:700; letter-spacing:-0.5px; flex-shrink:0; transition:color 0.2s; cursor:default; user-select:none; white-space:nowrap; }
       .ticker-item:hover { color:#666; }
+      .ticker-group { display:flex; align-items:baseline; gap:32px; flex-shrink:0; }
+      .ticker-label { color:#444; font-size:12px; font-weight:500; letter-spacing:0.5px; text-transform:uppercase; white-space:nowrap; user-select:none; }
       .nav-link { font-size:14px; font-weight:400; color:#555; transition:color 0.2s; text-decoration:none; }
       .nav-link:hover { color:#e0e0e0; }
       .footer-link { font-size:13px; color:#333; text-decoration:none; transition:color 0.2s; }
@@ -57,15 +59,26 @@ function IllustrationTunnel() {
 }
 const ILLUSTRATIONS = [IllustrationShield, IllustrationEye, IllustrationReplay, IllustrationRetry, IllustrationLogs, IllustrationTunnel];
 
-// Trusted-by ticker
-function TrustedBy() {
-  const companies = ['Paystack', 'Flutterwave', 'Moniepoint', 'Bachs', 'Clerk', 'Resend'];
-  const items = [...companies, ...companies, ...companies];
+// Integrations ticker. Each name sits under a label saying how it relates to HookLens,
+// so the strip can't be read as a list of customers.
+const TICKER_GROUPS = [
+  { label: 'Works with', names: ['Paystack'] },
+  { label: 'Coming soon', names: ['Flutterwave', 'Monnify'] },
+  { label: 'Built with', names: ['Clerk', 'Resend'] },
+];
+
+function IntegrationsTicker() {
+  const items = [...TICKER_GROUPS, ...TICKER_GROUPS, ...TICKER_GROUPS];
   return (
     <div style={{ backgroundColor: '#000000', borderTop: '1px solid #111', borderBottom: '1px solid #111', padding: '20px 0', overflow: 'hidden' }}>
       <div className="ticker-track">
-        {items.map((c, i) => (
-          <span key={i} className="ticker-item">{c}</span>
+        {items.map((group, i) => (
+          <span key={i} className="ticker-group">
+            <span className="ticker-label">{group.label}</span>
+            {group.names.map((name) => (
+              <span key={name} className="ticker-item">{name}</span>
+            ))}
+          </span>
         ))}
       </div>
     </div>
@@ -455,7 +468,7 @@ export default function LandingPage() {
       <GlobalStyles />
       <Nav />
       <Hero />
-      <TrustedBy />
+      <IntegrationsTicker />
       <FeaturesSection />
       <ProductPreviewSection />
       <IntegrationsSection />
